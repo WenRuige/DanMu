@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>javascript弹幕</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <style>
+
+
+        #container{
+            width:600px;
+            height:500px;
+            background-color:black;
+
+
+        }
+        #danmu{
+            position:absolute;
+            font-size:24px;
+            color:#fff;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<div id="container">
+</div>
+<input type="text" id="DanMu" value="这是弹幕..."/>
+</br>
+<input type="button" value="发送" onClick="DanMuShooter.shoot();"/>
+
+<script>
+    var si;
+    var DanMuShooter = {
+        shoot:function(){
+            //clearInterval用于取消函数设定的定时操作
+            clearInterval(si);
+            //获取输入框的DOM
+            var text = document.getElementById("DanMu");
+            //获取发送容器的DOM
+            var container = document.getElementById("container");
+            //生成一条弹幕
+            var danmu="<font id=\"danmu\" color=\"red\">"+text.value+"</font>";
+            //获取弹幕始发的高度.(计算公式  = 容器的高度*随机数)
+            Height = Math.round(Math.random()*container.offsetHeight)+"px";
+            //获取弹幕的宽度
+            var Left=container.offsetWidth+"px";
+            //把弹幕放置到容器中
+            container.innerHTML=danmu;
+            //获取生成弹幕的DOM
+            var danmuObj = document.getElementById("danmu");
+            //修改弹幕的css(始发位置(left,height))
+            danmuObj.style.left=Left;
+            danmuObj.style.top=Height;
+            var x=parseInt(danmuObj.style.left);
+            //设置定时函数
+            si = setInterval("DanMuShooter.rolling("+x+")",100);
+
+        }, rolling:function(left){
+            //获取弹幕的DOM
+            var danmuObj = document.getElementById("danmu");
+            //设置弹幕的left css
+            danmuObj.style.left=left;
+            //获取到弹幕当前的left值
+            var x=parseInt(danmuObj.style.left);
+
+            if(x < 0){
+                document.getElementById("container").innerHTML="";
+                clearInterval(si);
+            }else{
+                //弹幕的left值进行递减操作
+                x-=15;
+            }
+            //重新设定弹幕的left的值
+            danmuObj.style.left=x+"px";
+        }
+    }
+
+</script>
+
+</body>
+</html>
